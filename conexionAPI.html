@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bases del Concurso - Rally Fotográfico</title>
+    <link rel="stylesheet" type="text/css" href="./css/cssindex.css" />
+  </head>
+  <body>
+    <nav>
+      <h1>Rally Fotográfico</h1>
+      <ul>
+        <li><a href="./login.php">Acceder como usuario</a></li>
+        <li><a href="./registro.php">Regístrate para participar</a></li>
+        <li><a href="#bases">Bases del concurso</a></li>
+      </ul>
+    </nav>
+
+    <div class="contenedor" id="bases">
+      <h2>Bases del Concurso</h2>
+      <div id="base_info">
+        <!-- Aquí se cargarán los datos dinámicamente -->
+      </div>
+    </div>
+
+    <script>
+      // Hacemos una solicitud a la API en ByetHost que devuelve las bases del concurso en JSON.
+      fetch("http://dawmichel.byethost31.com/proyectoBackend/listarbases.php")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error en la respuesta de la API");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const baseInfoDiv = document.getElementById("base_info");
+          if (data) {
+            baseInfoDiv.innerHTML = `
+                  <p><strong>Máximo de fotos por persona:</strong> ${data.max_fotos}</p>
+                  <p><strong>Inicio de participación:</strong> ${data.fecha_inicio}</p>
+                  <p><strong>Fin de participación:</strong> ${data.fecha_fin}</p>
+                  <p><strong>Inicio de votaciones:</strong> ${data.fecha_votacion}</p>
+              `;
+          } else {
+            baseInfoDiv.innerHTML =
+              "<p>No se han encontrado las bases del concurso.</p>";
+          }
+        })
+        .catch((error) => {
+          console.error("Error al obtener las bases:", error);
+          document.getElementById("base_info").innerHTML =
+            "<p>Error al cargar las bases del concurso.</p>";
+        });
+    </script>
+  </body>
+</html>
